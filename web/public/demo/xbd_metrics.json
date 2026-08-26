@@ -1,0 +1,711 @@
+{
+  "source": "https://drive.google.com/drive/folders/1Yeb7vfp4bOTb2i1gcT0HBOBPpEE0uMHH",
+  "dataset": "xBD building crops (resnet_dataset)",
+  "n_total": 13213,
+  "counts": {
+    "no-damage": 1635,
+    "minor-damage": 4737,
+    "major-damage": 2852,
+    "destroyed": 3989
+  },
+  "baseline": "RandomForest on RGB histograms (CPU stand-in; run train.py for ResNet50)",
+  "n_eval": 800,
+  "metrics": {
+    "weighted_f1": 0.5643,
+    "macro_f1": 0.5643,
+    "per_class_f1": {
+      "no-damage": 0.5545,
+      "minor-damage": 0.5253,
+      "major-damage": 0.5435,
+      "destroyed": 0.6338
+    },
+    "confusion_matrix": [
+      [
+        122,
+        35,
+        22,
+        21
+      ],
+      [
+        46,
+        104,
+        40,
+        10
+      ],
+      [
+        27,
+        38,
+        103,
+        32
+      ],
+      [
+        45,
+        19,
+        14,
+        122
+      ]
+    ]
+  },
+  "classes": [
+    {
+      "id": "no-damage",
+      "ordinal": 0,
+      "color": "#22c55e"
+    },
+    {
+      "id": "minor-damage",
+      "ordinal": 1,
+      "color": "#eab308"
+    },
+    {
+      "id": "major-damage",
+      "ordinal": 2,
+      "color": "#f97316"
+    },
+    {
+      "id": "destroyed",
+      "ordinal": 3,
+      "color": "#ef4444"
+    }
+  ],
+  "gallery": [
+    {
+      "uid": "52124a7c-fdee-441e-bf38-f983395c56bc",
+      "label": "no-damage",
+      "pred": "minor-damage",
+      "crop": "/demo/xbd-crops/no-damage/52124a7c-fdee-441e-bf38-f983395c56bc.jpg",
+      "probs": {
+        "no-damage": 0.2254,
+        "minor-damage": 0.3257,
+        "major-damage": 0.271,
+        "destroyed": 0.1779
+      },
+      "correct": false
+    },
+    {
+      "uid": "cdfb7deb-4382-422a-8a92-6bac29bf6da5",
+      "label": "no-damage",
+      "pred": "no-damage",
+      "crop": "/demo/xbd-crops/no-damage/cdfb7deb-4382-422a-8a92-6bac29bf6da5.jpg",
+      "probs": {
+        "no-damage": 0.4613,
+        "minor-damage": 0.1796,
+        "major-damage": 0.236,
+        "destroyed": 0.1231
+      },
+      "correct": true
+    },
+    {
+      "uid": "62887a50-26b4-43f7-bd1f-7047ae62e523",
+      "label": "no-damage",
+      "pred": "destroyed",
+      "crop": "/demo/xbd-crops/no-damage/62887a50-26b4-43f7-bd1f-7047ae62e523.jpg",
+      "probs": {
+        "no-damage": 0.1465,
+        "minor-damage": 0.1018,
+        "major-damage": 0.2254,
+        "destroyed": 0.5263
+      },
+      "correct": false
+    },
+    {
+      "uid": "f2b72052-9ac7-4058-9c1a-de6bda07c164",
+      "label": "no-damage",
+      "pred": "no-damage",
+      "crop": "/demo/xbd-crops/no-damage/f2b72052-9ac7-4058-9c1a-de6bda07c164.jpg",
+      "probs": {
+        "no-damage": 0.4507,
+        "minor-damage": 0.1075,
+        "major-damage": 0.1467,
+        "destroyed": 0.2951
+      },
+      "correct": true
+    },
+    {
+      "uid": "c7417b6b-4607-479b-8801-3b4857d338c7",
+      "label": "no-damage",
+      "pred": "no-damage",
+      "crop": "/demo/xbd-crops/no-damage/c7417b6b-4607-479b-8801-3b4857d338c7.jpg",
+      "probs": {
+        "no-damage": 0.416,
+        "minor-damage": 0.2119,
+        "major-damage": 0.0828,
+        "destroyed": 0.2893
+      },
+      "correct": true
+    },
+    {
+      "uid": "4ebdbbc3-38a0-4aa5-8195-3b0e3c17c013",
+      "label": "no-damage",
+      "pred": "major-damage",
+      "crop": "/demo/xbd-crops/no-damage/4ebdbbc3-38a0-4aa5-8195-3b0e3c17c013.jpg",
+      "probs": {
+        "no-damage": 0.2803,
+        "minor-damage": 0.2265,
+        "major-damage": 0.313,
+        "destroyed": 0.1802
+      },
+      "correct": false
+    },
+    {
+      "uid": "411d91c5-fabc-41d1-a121-0d938545d587",
+      "label": "no-damage",
+      "pred": "no-damage",
+      "crop": "/demo/xbd-crops/no-damage/411d91c5-fabc-41d1-a121-0d938545d587.jpg",
+      "probs": {
+        "no-damage": 0.3359,
+        "minor-damage": 0.2848,
+        "major-damage": 0.2608,
+        "destroyed": 0.1185
+      },
+      "correct": true
+    },
+    {
+      "uid": "e290c203-c198-4e82-b3ae-b79a6cc5a3d5",
+      "label": "no-damage",
+      "pred": "destroyed",
+      "crop": "/demo/xbd-crops/no-damage/e290c203-c198-4e82-b3ae-b79a6cc5a3d5.jpg",
+      "probs": {
+        "no-damage": 0.2658,
+        "minor-damage": 0.3152,
+        "major-damage": 0.0985,
+        "destroyed": 0.3205
+      },
+      "correct": false
+    },
+    {
+      "uid": "a4d950ab-c81d-4445-9927-b2cd52700d81",
+      "label": "no-damage",
+      "pred": "major-damage",
+      "crop": "/demo/xbd-crops/no-damage/a4d950ab-c81d-4445-9927-b2cd52700d81.jpg",
+      "probs": {
+        "no-damage": 0.2454,
+        "minor-damage": 0.2154,
+        "major-damage": 0.2727,
+        "destroyed": 0.2665
+      },
+      "correct": false
+    },
+    {
+      "uid": "78a01487-dfe3-43cc-a20d-fdca5322e9fe",
+      "label": "no-damage",
+      "pred": "no-damage",
+      "crop": "/demo/xbd-crops/no-damage/78a01487-dfe3-43cc-a20d-fdca5322e9fe.jpg",
+      "probs": {
+        "no-damage": 0.3535,
+        "minor-damage": 0.2499,
+        "major-damage": 0.2234,
+        "destroyed": 0.1732
+      },
+      "correct": true
+    },
+    {
+      "uid": "24d9e6e1-e0de-4c3e-9253-dcf0e3e9c441",
+      "label": "no-damage",
+      "pred": "major-damage",
+      "crop": "/demo/xbd-crops/no-damage/24d9e6e1-e0de-4c3e-9253-dcf0e3e9c441.jpg",
+      "probs": {
+        "no-damage": 0.2511,
+        "minor-damage": 0.255,
+        "major-damage": 0.2803,
+        "destroyed": 0.2136
+      },
+      "correct": false
+    },
+    {
+      "uid": "9852c171-ad60-4d0c-81a4-0316ad053800",
+      "label": "no-damage",
+      "pred": "no-damage",
+      "crop": "/demo/xbd-crops/no-damage/9852c171-ad60-4d0c-81a4-0316ad053800.jpg",
+      "probs": {
+        "no-damage": 0.4478,
+        "minor-damage": 0.1204,
+        "major-damage": 0.1931,
+        "destroyed": 0.2387
+      },
+      "correct": true
+    },
+    {
+      "uid": "5b52960a-5612-4b10-8819-7266af98009a",
+      "label": "minor-damage",
+      "pred": "no-damage",
+      "crop": "/demo/xbd-crops/minor-damage/5b52960a-5612-4b10-8819-7266af98009a.jpg",
+      "probs": {
+        "no-damage": 0.2807,
+        "minor-damage": 0.2584,
+        "major-damage": 0.2036,
+        "destroyed": 0.2573
+      },
+      "correct": false
+    },
+    {
+      "uid": "50d8f80c-e67e-42fb-b80c-07e315d396b0",
+      "label": "minor-damage",
+      "pred": "no-damage",
+      "crop": "/demo/xbd-crops/minor-damage/50d8f80c-e67e-42fb-b80c-07e315d396b0.jpg",
+      "probs": {
+        "no-damage": 0.309,
+        "minor-damage": 0.3016,
+        "major-damage": 0.2168,
+        "destroyed": 0.1726
+      },
+      "correct": false
+    },
+    {
+      "uid": "40ccd25e-bcd8-49a3-825c-2dea54fcd408",
+      "label": "minor-damage",
+      "pred": "minor-damage",
+      "crop": "/demo/xbd-crops/minor-damage/40ccd25e-bcd8-49a3-825c-2dea54fcd408.jpg",
+      "probs": {
+        "no-damage": 0.1096,
+        "minor-damage": 0.5699,
+        "major-damage": 0.1922,
+        "destroyed": 0.1284
+      },
+      "correct": true
+    },
+    {
+      "uid": "1602a011-501c-49e9-862c-63c59504831f",
+      "label": "minor-damage",
+      "pred": "minor-damage",
+      "crop": "/demo/xbd-crops/minor-damage/1602a011-501c-49e9-862c-63c59504831f.jpg",
+      "probs": {
+        "no-damage": 0.1898,
+        "minor-damage": 0.4661,
+        "major-damage": 0.2935,
+        "destroyed": 0.0506
+      },
+      "correct": true
+    },
+    {
+      "uid": "a8f151b7-2efe-413f-8807-1421fc0e7dbc",
+      "label": "minor-damage",
+      "pred": "destroyed",
+      "crop": "/demo/xbd-crops/minor-damage/a8f151b7-2efe-413f-8807-1421fc0e7dbc.jpg",
+      "probs": {
+        "no-damage": 0.2891,
+        "minor-damage": 0.1506,
+        "major-damage": 0.1428,
+        "destroyed": 0.4175
+      },
+      "correct": false
+    },
+    {
+      "uid": "cb8e44e6-63a3-4006-9ad3-fc960f77497f",
+      "label": "minor-damage",
+      "pred": "no-damage",
+      "crop": "/demo/xbd-crops/minor-damage/cb8e44e6-63a3-4006-9ad3-fc960f77497f.jpg",
+      "probs": {
+        "no-damage": 0.3121,
+        "minor-damage": 0.2913,
+        "major-damage": 0.3068,
+        "destroyed": 0.0898
+      },
+      "correct": false
+    },
+    {
+      "uid": "f83cc62d-5fc7-4e7e-891e-a976af505b6b",
+      "label": "minor-damage",
+      "pred": "minor-damage",
+      "crop": "/demo/xbd-crops/minor-damage/f83cc62d-5fc7-4e7e-891e-a976af505b6b.jpg",
+      "probs": {
+        "no-damage": 0.2185,
+        "minor-damage": 0.5963,
+        "major-damage": 0.0888,
+        "destroyed": 0.0965
+      },
+      "correct": true
+    },
+    {
+      "uid": "6e594703-b502-491e-80f1-01d1cab2f3e4",
+      "label": "minor-damage",
+      "pred": "minor-damage",
+      "crop": "/demo/xbd-crops/minor-damage/6e594703-b502-491e-80f1-01d1cab2f3e4.jpg",
+      "probs": {
+        "no-damage": 0.1053,
+        "minor-damage": 0.7403,
+        "major-damage": 0.0907,
+        "destroyed": 0.0637
+      },
+      "correct": true
+    },
+    {
+      "uid": "fb6c3880-19ed-4af2-a9b9-7dd67cb88537",
+      "label": "minor-damage",
+      "pred": "minor-damage",
+      "crop": "/demo/xbd-crops/minor-damage/fb6c3880-19ed-4af2-a9b9-7dd67cb88537.jpg",
+      "probs": {
+        "no-damage": 0.3107,
+        "minor-damage": 0.5005,
+        "major-damage": 0.0798,
+        "destroyed": 0.1091
+      },
+      "correct": true
+    },
+    {
+      "uid": "58569e34-a15f-4168-9dc2-bd8290a83ed8",
+      "label": "minor-damage",
+      "pred": "minor-damage",
+      "crop": "/demo/xbd-crops/minor-damage/58569e34-a15f-4168-9dc2-bd8290a83ed8.jpg",
+      "probs": {
+        "no-damage": 0.24,
+        "minor-damage": 0.5566,
+        "major-damage": 0.0928,
+        "destroyed": 0.1106
+      },
+      "correct": true
+    },
+    {
+      "uid": "7d6e0a44-b24b-4bea-866f-9b0432ae0000",
+      "label": "minor-damage",
+      "pred": "minor-damage",
+      "crop": "/demo/xbd-crops/minor-damage/7d6e0a44-b24b-4bea-866f-9b0432ae0000.jpg",
+      "probs": {
+        "no-damage": 0.2088,
+        "minor-damage": 0.4415,
+        "major-damage": 0.1323,
+        "destroyed": 0.2173
+      },
+      "correct": true
+    },
+    {
+      "uid": "c5b77963-12c2-4926-ad17-1dd0f10c59b7",
+      "label": "minor-damage",
+      "pred": "minor-damage",
+      "crop": "/demo/xbd-crops/minor-damage/c5b77963-12c2-4926-ad17-1dd0f10c59b7.jpg",
+      "probs": {
+        "no-damage": 0.2974,
+        "minor-damage": 0.3486,
+        "major-damage": 0.1711,
+        "destroyed": 0.1829
+      },
+      "correct": true
+    },
+    {
+      "uid": "94440704-635f-4509-9baa-51e6ca12511d",
+      "label": "major-damage",
+      "pred": "major-damage",
+      "crop": "/demo/xbd-crops/major-damage/94440704-635f-4509-9baa-51e6ca12511d.jpg",
+      "probs": {
+        "no-damage": 0.0122,
+        "minor-damage": 0.0461,
+        "major-damage": 0.9221,
+        "destroyed": 0.0196
+      },
+      "correct": true
+    },
+    {
+      "uid": "9a53e5b0-39fd-405b-9971-16ac4254d4ab",
+      "label": "major-damage",
+      "pred": "major-damage",
+      "crop": "/demo/xbd-crops/major-damage/9a53e5b0-39fd-405b-9971-16ac4254d4ab.jpg",
+      "probs": {
+        "no-damage": 0.2779,
+        "minor-damage": 0.2583,
+        "major-damage": 0.3172,
+        "destroyed": 0.1467
+      },
+      "correct": true
+    },
+    {
+      "uid": "3efbda65-6d33-4a99-8843-ab55f8451ffe",
+      "label": "major-damage",
+      "pred": "destroyed",
+      "crop": "/demo/xbd-crops/major-damage/3efbda65-6d33-4a99-8843-ab55f8451ffe.jpg",
+      "probs": {
+        "no-damage": 0.1338,
+        "minor-damage": 0.2371,
+        "major-damage": 0.2137,
+        "destroyed": 0.4154
+      },
+      "correct": false
+    },
+    {
+      "uid": "138a7d4a-d12d-417e-9bf3-36f3741bc548",
+      "label": "major-damage",
+      "pred": "destroyed",
+      "crop": "/demo/xbd-crops/major-damage/138a7d4a-d12d-417e-9bf3-36f3741bc548.jpg",
+      "probs": {
+        "no-damage": 0.2636,
+        "minor-damage": 0.1981,
+        "major-damage": 0.1866,
+        "destroyed": 0.3517
+      },
+      "correct": false
+    },
+    {
+      "uid": "e4c76333-1133-4347-9364-f9902cc5ba5e",
+      "label": "major-damage",
+      "pred": "major-damage",
+      "crop": "/demo/xbd-crops/major-damage/e4c76333-1133-4347-9364-f9902cc5ba5e.jpg",
+      "probs": {
+        "no-damage": 0.0975,
+        "minor-damage": 0.151,
+        "major-damage": 0.7043,
+        "destroyed": 0.0471
+      },
+      "correct": true
+    },
+    {
+      "uid": "495a81f4-0a0d-49fb-b311-1431e163e479",
+      "label": "major-damage",
+      "pred": "minor-damage",
+      "crop": "/demo/xbd-crops/major-damage/495a81f4-0a0d-49fb-b311-1431e163e479.jpg",
+      "probs": {
+        "no-damage": 0.1045,
+        "minor-damage": 0.4452,
+        "major-damage": 0.2794,
+        "destroyed": 0.1709
+      },
+      "correct": false
+    },
+    {
+      "uid": "65291fbe-c027-4acb-a155-648e58038c0a",
+      "label": "major-damage",
+      "pred": "major-damage",
+      "crop": "/demo/xbd-crops/major-damage/65291fbe-c027-4acb-a155-648e58038c0a.jpg",
+      "probs": {
+        "no-damage": 0.2965,
+        "minor-damage": 0.1198,
+        "major-damage": 0.2989,
+        "destroyed": 0.2848
+      },
+      "correct": true
+    },
+    {
+      "uid": "22595213-f88f-40d1-8320-20d3c5b3c35d",
+      "label": "major-damage",
+      "pred": "destroyed",
+      "crop": "/demo/xbd-crops/major-damage/22595213-f88f-40d1-8320-20d3c5b3c35d.jpg",
+      "probs": {
+        "no-damage": 0.029,
+        "minor-damage": 0.0047,
+        "major-damage": 0.122,
+        "destroyed": 0.8443
+      },
+      "correct": false
+    },
+    {
+      "uid": "4b454923-c304-4700-b0a6-7d2730d68982",
+      "label": "major-damage",
+      "pred": "major-damage",
+      "crop": "/demo/xbd-crops/major-damage/4b454923-c304-4700-b0a6-7d2730d68982.jpg",
+      "probs": {
+        "no-damage": 0.0515,
+        "minor-damage": 0.219,
+        "major-damage": 0.7214,
+        "destroyed": 0.0081
+      },
+      "correct": true
+    },
+    {
+      "uid": "7c6aafc9-5530-4de0-a498-9b12f090014d",
+      "label": "major-damage",
+      "pred": "minor-damage",
+      "crop": "/demo/xbd-crops/major-damage/7c6aafc9-5530-4de0-a498-9b12f090014d.jpg",
+      "probs": {
+        "no-damage": 0.1587,
+        "minor-damage": 0.4596,
+        "major-damage": 0.2046,
+        "destroyed": 0.177
+      },
+      "correct": false
+    },
+    {
+      "uid": "ada14166-aed8-4b5e-b2a3-1e2cc3edd1eb",
+      "label": "major-damage",
+      "pred": "minor-damage",
+      "crop": "/demo/xbd-crops/major-damage/ada14166-aed8-4b5e-b2a3-1e2cc3edd1eb.jpg",
+      "probs": {
+        "no-damage": 0.2606,
+        "minor-damage": 0.2658,
+        "major-damage": 0.2255,
+        "destroyed": 0.2481
+      },
+      "correct": false
+    },
+    {
+      "uid": "cbe55662-65a7-459b-b026-3bb3e678032f",
+      "label": "major-damage",
+      "pred": "major-damage",
+      "crop": "/demo/xbd-crops/major-damage/cbe55662-65a7-459b-b026-3bb3e678032f.jpg",
+      "probs": {
+        "no-damage": 0.2715,
+        "minor-damage": 0.2099,
+        "major-damage": 0.3141,
+        "destroyed": 0.2045
+      },
+      "correct": true
+    },
+    {
+      "uid": "2ae2912e-f3bb-4062-bcf8-5fd9cbb0b563",
+      "label": "destroyed",
+      "pred": "destroyed",
+      "crop": "/demo/xbd-crops/destroyed/2ae2912e-f3bb-4062-bcf8-5fd9cbb0b563.jpg",
+      "probs": {
+        "no-damage": 0.1511,
+        "minor-damage": 0.1335,
+        "major-damage": 0.2001,
+        "destroyed": 0.5153
+      },
+      "correct": true
+    },
+    {
+      "uid": "d829cd89-36a9-4ce1-9aea-96aaab861ddd",
+      "label": "destroyed",
+      "pred": "destroyed",
+      "crop": "/demo/xbd-crops/destroyed/d829cd89-36a9-4ce1-9aea-96aaab861ddd.jpg",
+      "probs": {
+        "no-damage": 0.2182,
+        "minor-damage": 0.2818,
+        "major-damage": 0.1806,
+        "destroyed": 0.3193
+      },
+      "correct": true
+    },
+    {
+      "uid": "bcb96bf3-e37c-40db-90a1-8e5f7d854c14",
+      "label": "destroyed",
+      "pred": "destroyed",
+      "crop": "/demo/xbd-crops/destroyed/bcb96bf3-e37c-40db-90a1-8e5f7d854c14.jpg",
+      "probs": {
+        "no-damage": 0.0907,
+        "minor-damage": 0.0777,
+        "major-damage": 0.1659,
+        "destroyed": 0.6657
+      },
+      "correct": true
+    },
+    {
+      "uid": "65cce7a3-30a3-4501-a6ef-f52cdbee48d9",
+      "label": "destroyed",
+      "pred": "destroyed",
+      "crop": "/demo/xbd-crops/destroyed/65cce7a3-30a3-4501-a6ef-f52cdbee48d9.jpg",
+      "probs": {
+        "no-damage": 0.0513,
+        "minor-damage": 0.0257,
+        "major-damage": 0.0987,
+        "destroyed": 0.8243
+      },
+      "correct": true
+    },
+    {
+      "uid": "3d4ceb4e-7e82-4fa2-afd2-1567dbddb58e",
+      "label": "destroyed",
+      "pred": "no-damage",
+      "crop": "/demo/xbd-crops/destroyed/3d4ceb4e-7e82-4fa2-afd2-1567dbddb58e.jpg",
+      "probs": {
+        "no-damage": 0.4598,
+        "minor-damage": 0.0431,
+        "major-damage": 0.1488,
+        "destroyed": 0.3483
+      },
+      "correct": false
+    },
+    {
+      "uid": "8a7d9290-e37e-4600-ba02-8a5b85f909d7",
+      "label": "destroyed",
+      "pred": "destroyed",
+      "crop": "/demo/xbd-crops/destroyed/8a7d9290-e37e-4600-ba02-8a5b85f909d7.jpg",
+      "probs": {
+        "no-damage": 0.0843,
+        "minor-damage": 0.0263,
+        "major-damage": 0.0887,
+        "destroyed": 0.8007
+      },
+      "correct": true
+    },
+    {
+      "uid": "ee96cb2d-f971-43e2-a7bc-c00cb89d2643",
+      "label": "destroyed",
+      "pred": "destroyed",
+      "crop": "/demo/xbd-crops/destroyed/ee96cb2d-f971-43e2-a7bc-c00cb89d2643.jpg",
+      "probs": {
+        "no-damage": 0.014,
+        "minor-damage": 0.0,
+        "major-damage": 0.033,
+        "destroyed": 0.953
+      },
+      "correct": true
+    },
+    {
+      "uid": "13bffdaf-14f9-4658-b0ca-8ddc7847e464",
+      "label": "destroyed",
+      "pred": "minor-damage",
+      "crop": "/demo/xbd-crops/destroyed/13bffdaf-14f9-4658-b0ca-8ddc7847e464.jpg",
+      "probs": {
+        "no-damage": 0.2867,
+        "minor-damage": 0.3001,
+        "major-damage": 0.2484,
+        "destroyed": 0.1649
+      },
+      "correct": false
+    },
+    {
+      "uid": "05ab71b1-0cd6-4d54-a78c-df19835a99dd",
+      "label": "destroyed",
+      "pred": "major-damage",
+      "crop": "/demo/xbd-crops/destroyed/05ab71b1-0cd6-4d54-a78c-df19835a99dd.jpg",
+      "probs": {
+        "no-damage": 0.1431,
+        "minor-damage": 0.3226,
+        "major-damage": 0.3782,
+        "destroyed": 0.1561
+      },
+      "correct": false
+    },
+    {
+      "uid": "5fbe9eb1-28c6-4581-82e5-534267dee6d5",
+      "label": "destroyed",
+      "pred": "minor-damage",
+      "crop": "/demo/xbd-crops/destroyed/5fbe9eb1-28c6-4581-82e5-534267dee6d5.jpg",
+      "probs": {
+        "no-damage": 0.1913,
+        "minor-damage": 0.3288,
+        "major-damage": 0.2896,
+        "destroyed": 0.1903
+      },
+      "correct": false
+    },
+    {
+      "uid": "214c652f-1820-43a5-8a7c-3b441a66ba03",
+      "label": "destroyed",
+      "pred": "destroyed",
+      "crop": "/demo/xbd-crops/destroyed/214c652f-1820-43a5-8a7c-3b441a66ba03.jpg",
+      "probs": {
+        "no-damage": 0.2401,
+        "minor-damage": 0.2721,
+        "major-damage": 0.1185,
+        "destroyed": 0.3693
+      },
+      "correct": true
+    },
+    {
+      "uid": "08ca15ce-e22d-4847-9e05-696f2e556b53",
+      "label": "destroyed",
+      "pred": "minor-damage",
+      "crop": "/demo/xbd-crops/destroyed/08ca15ce-e22d-4847-9e05-696f2e556b53.jpg",
+      "probs": {
+        "no-damage": 0.2954,
+        "minor-damage": 0.4021,
+        "major-damage": 0.11,
+        "destroyed": 0.1925
+      },
+      "correct": false
+    }
+  ],
+  "severity_if_all_predicted": 46.21,
+  "severity_if_all_labeled": 50.0,
+  "class_histogram_eval_true": {
+    "no-damage": 200,
+    "minor-damage": 200,
+    "major-damage": 200,
+    "destroyed": 200
+  },
+  "class_histogram_eval_pred": {
+    "no-damage": 240,
+    "minor-damage": 196,
+    "major-damage": 179,
+    "destroyed": 185
+  }
+}

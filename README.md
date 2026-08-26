@@ -32,6 +32,24 @@ Tile severity = `100 × mean(ordinal weight)` over buildings on that tile. Rank 
 
 xBD is class-imbalanced. **Weighted F1** is the metric that matters. Minor vs major damage is the hard pair.
 
+## Your xBD data (Google Drive)
+
+The shared folder is already **extracted building chips**, not raw 1024×1024 tiles:
+
+https://drive.google.com/drive/folders/1Yeb7vfp4bOTb2i1gcT0HBOBPpEE0uMHH
+
+`resnet_dataset/` contains `no_damage`, `minor_damage`, `major_damage`, `destroyed` JPEGs (~13k crops).
+
+```bash
+cd ml
+python download_xbd_drive.py --out ../data/xbd
+python prepare_splits.py --manifest ../data/xbd/manifest.csv --out ../data/splits
+python baseline_eval.py --manifest ../data/xbd/manifest.csv
+python train.py --root .. --epochs 8 --freeze-backbone   # ResNet50, GPU preferred
+```
+
+Crops are large in file count; `data/xbd/crops/` is gitignored. Re-run the downloader on another machine.
+
 ## Dashboard (demo tiles)
 
 The multi-GB xBD archive is not bundled. `ml/generate_demo_artifacts.py` synthesizes four disaster tiles in the same format as extraction output so the UI can run immediately. Replace them with your crops when you train.

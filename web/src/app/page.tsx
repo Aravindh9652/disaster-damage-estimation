@@ -28,16 +28,26 @@ export default function OverviewPage() {
   return (
     <div className="space-y-8">
       <section className="space-y-3">
-        <Badge variant="secondary" className="bg-orange-500/15 text-orange-200">
-          Continuation after building extraction
-        </Badge>
+        <div className="flex flex-wrap gap-2">
+          <Badge variant="secondary" className="bg-orange-500/15 text-orange-200">
+            Continuation after building extraction
+          </Badge>
+          <Badge variant="secondary" className="bg-emerald-500/15 text-emerald-200">
+            Your Drive xBD folder is wired in
+          </Badge>
+        </div>
         <h1 className="max-w-3xl text-3xl font-semibold tracking-tight text-white sm:text-4xl">
           Classify every extracted building, then rank tiles by severity.
         </h1>
         <p className="max-w-2xl text-slate-400">
-          Your xBD work already produced post-disaster crops. This slice trains a
-          ResNet50 Joint Damage Scale head, reports weighted F1 (not accuracy),
-          and rolls predictions into a 0–100 neighborhood severity index.
+          Your Drive folder (<span className="text-slate-300">resnet_dataset</span>)
+          already holds extracted building chips. Open{" "}
+          <Link href="/dataset" className="text-orange-300 hover:underline">
+            Your xBD
+          </Link>{" "}
+          for counts, a CPU baseline, and real crops. The map page still uses
+          four demo tiles so you can see polygon overlays until full post-disaster
+          GeoJSON is in the folder.
         </p>
       </section>
 

@@ -6,16 +6,34 @@ export default function RunPage() {
       <div>
         <h1 className="text-2xl font-semibold text-white">Run the continuation on your xBD subset</h1>
         <p className="mt-2 max-w-2xl text-sm text-slate-400">
-          Keep the crops you already extracted. Point the scripts at that folder instead of
-          the synthetic demo tiles shipped with this repo.
+          Your Google Drive folder is already the extracted-building stage
+          (<code>resnet_dataset</code> with four class folders of JPEG chips).
+          Download it, then split and train ResNet50.
         </p>
       </div>
 
       <Card className="bg-[#0d1724] ring-white/10">
         <CardHeader>
+          <CardTitle>Download the Drive folder</CardTitle>
+          <CardDescription>
+            https://drive.google.com/drive/folders/1Yeb7vfp4bOTb2i1gcT0HBOBPpEE0uMHH
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <pre className="overflow-x-auto rounded-lg bg-black/40 p-4 text-xs text-slate-300">{`cd ml
+python download_xbd_drive.py --out ../data/xbd
+python prepare_splits.py --manifest ../data/xbd/manifest.csv --out ../data/splits
+python baseline_eval.py --manifest ../data/xbd/manifest.csv
+# GPU / Colab:
+python train.py --root .. --epochs 8 --freeze-backbone`}</pre>
+        </CardContent>
+      </Card>
+
+      <Card className="bg-[#0d1724] ring-white/10">
+        <CardHeader>
           <CardTitle>Expected folders</CardTitle>
           <CardDescription>
-            Matches a typical xBD download plus the building-extraction notebook you already ran.
+            Drive crops land in data/xbd. Raw tiles are optional if buildings are already extracted.
           </CardDescription>
         </CardHeader>
         <CardContent>
