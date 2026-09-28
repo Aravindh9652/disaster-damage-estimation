@@ -6,7 +6,10 @@ import torch
 from torch import nn
 from torchvision.models import ResNet50_Weights, resnet50
 
-from labels import CLASSES
+try:  # Package import for the API; direct import for existing training scripts.
+    from .labels import CLASSES
+except ImportError:
+    from labels import CLASSES
 
 
 def build_resnet50(pretrained: bool = True, freeze_backbone: bool = True) -> nn.Module:

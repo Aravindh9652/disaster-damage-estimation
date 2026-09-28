@@ -62,6 +62,21 @@ npm run dev
 
 Opens on [http://127.0.0.1:43147](http://127.0.0.1:43147).
 
+## Live inference portal
+
+The `/run` page accepts an individual post-disaster building crop and sends it to
+the trained checkpoint. Start the backend before using the upload form:
+
+```bash
+pip install -r ml/requirements.txt
+uvicorn ml.api:app --host 0.0.0.0 --port 8000
+```
+
+Then start the Next.js app from `web/`. The model is a **building-crop
+classifier**: it provides the four xBD damage classes and probabilities, not
+building detection, segmentation, or map coordinates. Critical assessments require
+human review.
+
 ## Train on your extracted buildings
 
 ```bash

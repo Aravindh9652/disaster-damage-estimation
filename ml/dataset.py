@@ -7,7 +7,10 @@ from PIL import Image
 from torch.utils.data import Dataset
 from torchvision import transforms
 
-from labels import CLASS_TO_IDX
+try:  # Package import for the API; direct import for existing training scripts.
+    from .labels import CLASS_TO_IDX
+except ImportError:
+    from labels import CLASS_TO_IDX
 
 
 def train_transforms(size: int = 224) -> transforms.Compose:
