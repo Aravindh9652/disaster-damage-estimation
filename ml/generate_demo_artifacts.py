@@ -32,6 +32,8 @@ DISASTERS = [
         "id": "hurricane-harvey-houston",
         "name": "Hurricane Harvey",
         "place": "Houston, Texas",
+        "latitude": 29.7604,
+        "longitude": -95.3698,
         "type": "flood",
         "date": "2017-08-29",
         "mix": {"no-damage": 0.42, "minor-damage": 0.22, "major-damage": 0.20, "destroyed": 0.16},
@@ -41,6 +43,8 @@ DISASTERS = [
         "id": "santa-rosa-wildfire",
         "name": "Santa Rosa Wildfire",
         "place": "Santa Rosa, California",
+        "latitude": 38.4404,
+        "longitude": -122.7141,
         "type": "fire",
         "date": "2017-10-09",
         "mix": {"no-damage": 0.28, "minor-damage": 0.14, "major-damage": 0.18, "destroyed": 0.40},
@@ -50,6 +54,8 @@ DISASTERS = [
         "id": "palu-tsunami",
         "name": "Palu Tsunami",
         "place": "Palu, Indonesia",
+        "latitude": -0.8917,
+        "longitude": 119.8707,
         "type": "tsunami",
         "date": "2018-09-28",
         "mix": {"no-damage": 0.34, "minor-damage": 0.18, "major-damage": 0.24, "destroyed": 0.24},
@@ -59,6 +65,8 @@ DISASTERS = [
         "id": "mexico-city-earthquake",
         "name": "Mexico City Earthquake",
         "place": "Mexico City",
+        "latitude": 19.4326,
+        "longitude": -99.1332,
         "type": "earthquake",
         "date": "2017-09-19",
         "mix": {"no-damage": 0.55, "minor-damage": 0.20, "major-damage": 0.17, "destroyed": 0.08},
@@ -318,7 +326,7 @@ def main() -> None:
         true_labels = [b["label"] for b in event_buildings]
         events.append(
             {
-                **{k: disaster[k] for k in ("id", "name", "place", "type", "date")},
+                **{k: disaster[k] for k in ("id", "name", "place", "type", "date", "latitude", "longitude")},
                 "tile": f"/demo/tiles/{tile_name}",
                 "width": TILE_SIZE,
                 "height": TILE_SIZE,
@@ -378,7 +386,7 @@ def main() -> None:
 
     catalog = {
         "project": "AI Disaster Damage Mapping and Severity Estimation",
-        "continuation": "Building extraction → ResNet50 classification → tile severity maps",
+        "continuation": "Building extraction → ResNet50 classification → damage segmentation → priority zones",
         "classes": [
             {
                 "id": name,
@@ -400,6 +408,8 @@ def main() -> None:
             {"step": 4, "name": "Fine-tune ResNet50", "status": "done"},
             {"step": 5, "name": "Evaluate Joint Damage Scale", "status": "done"},
             {"step": 6, "name": "Map tile severity", "status": "done"},
+            {"step": 7, "name": "Segment damaged area", "status": "done"},
+            {"step": 8, "name": "Rank priority zones", "status": "done"},
         ],
         "metrics": {
             "weighted_f1": round(report["weighted_f1"], 4),

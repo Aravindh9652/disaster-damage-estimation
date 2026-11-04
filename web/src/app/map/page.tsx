@@ -13,9 +13,16 @@ import {
   type DamageClass,
   type DisasterEvent,
 } from "@/lib/catalog";
+import { buildingsToGeoJson } from "@/lib/geo";
+import dynamic from "next/dynamic";
 import { useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
+
+const GisMap = dynamic(() => import("@/components/gis-map").then((mod) => mod.GisMap), {
+  ssr: false,
+  loading: () => <p className="p-6 text-sm text-slate-400">Loading map…</p>,
+});
 
 const COLORS: Record<DamageClass, string> = {
   "no-damage": "#22c55e",
@@ -30,6 +37,7 @@ function MapInner() {
   const [eventId, setEventId] = useState<string | null>(params.get("event"));
   const [selected, setSelected] = useState<Building | null>(null);
   const [showPred, setShowPred] = useState(true);
+  const [showAll, setShowAll] = useState(false);
 
   const event: DisasterEvent | undefined = useMemo(() => {
     if (!catalog) return undefined;
@@ -43,7 +51,6 @@ function MapInner() {
     return <p className="text-red-300">{error ?? "No events"}</p>;
   }
 
-  const colorOf = (b: Building) => COLORS[showPred ? b.pred : b.label];
   const band = severityBand(event.severity_pred);
 
   return (
@@ -52,7 +59,7 @@ function MapInner() {
         <div>
           <h1 className="text-2xl font-semibold text-white">Damage map</h1>
           <p className="text-sm text-slate-400">
-            Polygons from building extraction, colored by ResNet50 class.
+            Building polygons on OpenStreetMap, placed at each event&apos;s city. Zoom out or choose All events to see the other disasters.
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
@@ -64,6 +71,7 @@ function MapInner() {
               onClick={() => {
                 setEventId(e.id);
                 setSelected(null);
+                setShowAll(false);
               }}
             >
               {e.name}
@@ -87,6 +95,12 @@ function MapInner() {
         >
           Ground truth
         </Button>
+        <Button size="sm" variant={showAll ? "secondary" : "outline"} onClick={() => setShowAll((value) => !value)}>
+          {showAll ? "Back to buildings" : "All events"}
+        </Button>
+        <Button size="sm" variant="outline" onClick={() => downloadGeoJson(event, showPred)}>
+          Download GeoJSON
+        </Button>
         {CLASS_ORDER.map((id) => (
           <span key={id} className="flex items-center gap-1.5 text-xs text-slate-400">
             <span className="size-2.5 rounded-full" style={{ background: COLORS[id] }} />
@@ -97,35 +111,21 @@ function MapInner() {
 
       <div className="grid gap-4 lg:grid-cols-[minmax(0,1.6fr)_minmax(280px,0.9fr)]">
         <Card className="overflow-hidden bg-[#0d1724] p-0 ring-white/10">
-          <div className="relative">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={event.tile}
-              alt={event.name}
-              className="block w-full"
-            />
-            <svg
-              viewBox={`0 0 ${event.width} ${event.height}`}
-              className="absolute inset-0 h-full w-full"
-            >
-              {event.buildings.map((b) => {
-                const points = b.polygon.map((p) => `${p.x},${p.y}`).join(" ");
-                const active = selected?.uid === b.uid;
-                return (
-                  <polygon
-                    key={b.uid}
-                    points={points}
-                    fill={colorOf(b)}
-                    fillOpacity={active ? 0.55 : 0.28}
-                    stroke={colorOf(b)}
-                    strokeWidth={active ? 3 : 1.5}
-                    className="cursor-pointer"
-                    onClick={() => setSelected(b)}
-                  />
-                );
-              })}
-            </svg>
-          </div>
+          <GisMap
+            events={catalog.events}
+            event={event}
+            showPred={showPred}
+            showAll={showAll}
+            selectedId={selected?.uid ?? null}
+            onSelectBuilding={(uid) => {
+              setSelected(event.buildings.find((building) => building.uid === uid) ?? null);
+            }}
+            onSelectEvent={(id) => {
+              setEventId(id);
+              setSelected(null);
+              setShowAll(false);
+            }}
+          />
         </Card>
 
         <div className="space-y-4">
@@ -223,6 +223,17 @@ function MapInner() {
       </div>
     </div>
   );
+}
+
+function downloadGeoJson(event: DisasterEvent, showPred: boolean) {
+  const payload = buildingsToGeoJson(event, showPred);
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/geo+json" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = `${event.id}.geojson`;
+  link.click();
+  URL.revokeObjectURL(url);
 }
 
 function Row({ label, value }: { label: string; value: string }) {

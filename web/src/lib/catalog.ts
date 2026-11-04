@@ -25,6 +25,8 @@ export type DisasterEvent = {
   place: string;
   type: string;
   date: string;
+  latitude?: number;
+  longitude?: number;
   tile: string;
   width: number;
   height: number;

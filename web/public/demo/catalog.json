@@ -1,6 +1,6 @@
 {
   "project": "AI Disaster Damage Mapping and Severity Estimation",
-  "continuation": "Building extraction \u2192 ResNet50 classification \u2192 tile severity maps",
+  "continuation": "Building extraction \u2192 ResNet50 classification \u2192 damage segmentation \u2192 priority zones",
   "classes": [
     {
       "id": "no-damage",
@@ -56,6 +56,16 @@
     {
       "step": 6,
       "name": "Map tile severity",
+      "status": "done"
+    },
+    {
+      "step": 7,
+      "name": "Segment damaged area",
+      "status": "done"
+    },
+    {
+      "step": 8,
+      "name": "Rank priority zones",
       "status": "done"
     }
   ],
@@ -2052,7 +2062,9 @@
         "destroyed": 3
       },
       "severity_true": 36.11,
-      "severity_pred": 28.47
+      "severity_pred": 28.47,
+      "latitude": 29.7604,
+      "longitude": -95.3698
     },
     {
       "id": "santa-rosa-wildfire",
@@ -3638,7 +3650,9 @@
         "destroyed": 8
       },
       "severity_true": 56.67,
-      "severity_pred": 45.83
+      "severity_pred": 45.83,
+      "latitude": 38.4404,
+      "longitude": -122.7141
     },
     {
       "id": "palu-tsunami",
@@ -5380,7 +5394,9 @@
         "destroyed": 7
       },
       "severity_true": 45.45,
-      "severity_pred": 34.85
+      "severity_pred": 34.85,
+      "latitude": -0.8917,
+      "longitude": 119.8707
     },
     {
       "id": "mexico-city-earthquake",
@@ -7434,7 +7450,9 @@
         "destroyed": 7
       },
       "severity_true": 25.64,
-      "severity_pred": 28.21
+      "severity_pred": 28.21,
+      "latitude": 19.4326,
+      "longitude": -99.1332
     }
   ],
   "note": "Demo tiles are synthesized so the dashboard runs without the multi-GB xBD download. Point extract_buildings.py at your saved xBD subset and run train.py to replace these numbers."

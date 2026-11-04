@@ -128,3 +128,17 @@
     @apply font-sans;
   }
 }
+
+/* Leaflet tiles collapse under Tailwind's img { max-width: 100%; height: auto }. */
+.leaflet-container {
+  z-index: 0;
+  height: 560px;
+  width: 100%;
+  background: #dbe4ee;
+  font-family: inherit;
+}
+.leaflet-container img,
+.leaflet-container canvas {
+  max-width: none !important;
+  max-height: none !important;
+}

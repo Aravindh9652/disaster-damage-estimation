@@ -2,13 +2,14 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Map, Satellite, Activity, Terminal, Images } from "lucide-react";
+import { Map, Satellite, Activity, Terminal, Images, ListOrdered } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const links = [
   { href: "/", label: "Overview", icon: Activity },
   { href: "/dataset", label: "Your xBD", icon: Images },
   { href: "/map", label: "Damage map", icon: Map },
+  { href: "/priority", label: "Priority", icon: ListOrdered },
   { href: "/model", label: "ResNet50", icon: Satellite },
   { href: "/run", label: "Run on xBD", icon: Terminal },
 ];

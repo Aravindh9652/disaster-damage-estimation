@@ -64,18 +64,47 @@ Opens on [http://127.0.0.1:43147](http://127.0.0.1:43147).
 
 ## Live inference portal
 
-The `/run` page accepts an individual post-disaster building crop and sends it to
-the trained checkpoint. Start the backend before using the upload form:
+The `/run` page accepts a post-disaster building crop and an optional pre-disaster
+image. The API classifies the crop, estimates a damage mask, and returns a
+priority score in the same response. Nothing is written to a database.
+
+| Module | Role |
+| --- | --- |
+| `ml/preprocess.py` | Resize and phase-correlation alignment of a pre/post pair |
+| `ml/unet.py`, `ml/segment.py` | U-Net damage mask, or change/texture estimate when no mask checkpoint exists |
+| `ml/scoring.py`, `ml/zones.py` | Priority score and in-memory zone ranking from the demo catalog |
+| `ml/seg_metrics.py` | IoU, Dice, and pixel accuracy for binary masks |
+
+Priority = `100 × (0.5 × severity + 0.3 × damage area + 0.2 × severity × confidence)`.
+
+```bash
+GET /api/damage-map
+GET /api/priority-zones
+GET /api/buildings/{uid}
+POST /api/analyze          # post image only
+POST /api/analyze-pair     # post_image + pre_image
+```
+
+`GET /api/analysis/{id}` is omitted on purpose: results are not stored.
+
+Start the backend before using the upload form:
 
 ```bash
 pip install -r ml/requirements.txt
 uvicorn ml.api:app --host 0.0.0.0 --port 8000
 ```
 
-Then start the Next.js app from `web/`. The model is a **building-crop
-classifier**: it provides the four xBD damage classes and probabilities, not
-building detection, segmentation, or map coordinates. Critical assessments require
-human review.
+Then start the Next.js app from `web/`. Classification uses the ResNet50 checkpoint.
+The damage mask uses `models/unet_damage.pt` when that file exists, and otherwise
+a pre/post change mask or a texture estimate. Critical assessments require human review.
+
+Open `/map` for the Leaflet view. Building polygons are drawn in longitude and latitude around each event city (Houston, Santa Rosa, Palu, Mexico City) at 0.8 m per pixel. **Download GeoJSON** saves that layer. No coordinates are written to a database.
+
+Open `/priority` for zone ranking. Docker runs the API only, with the model folder mounted read-only:
+
+```bash
+docker compose up --build
+```
 
 ## Train on your extracted buildings
 
@@ -92,6 +121,7 @@ cd ml
 python train.py --root .. --epochs 8 --freeze-backbone
 python evaluate.py --root .. --checkpoint ../models/resnet50_best.pt
 python severity.py
+python train_unet.py --data ../data/masks   # only if you have image/mask pairs
 ```
 
 On Colab, use a GPU runtime and `--unfreeze-backbone` after the classification head has settled.
