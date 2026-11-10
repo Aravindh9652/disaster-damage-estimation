@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/table";
 import { useCatalog } from "@/hooks/use-catalog";
 import { CLASS_ORDER, prettyClass } from "@/lib/catalog";
+import { Badge } from "@/components/ui/badge";
 
 export default function ModelPage() {
   const { catalog, error, loading } = useCatalog();
@@ -26,17 +27,19 @@ export default function ModelPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold text-white">ResNet50 evaluation</h1>
+        <Badge variant="secondary" className="bg-amber-500/15 text-amber-100">Synthetic demo figures — not an actual evaluation</Badge>
+        <h1 className="mt-2 text-2xl font-semibold text-white">Model evaluation demo</h1>
         <p className="mt-1 max-w-2xl text-sm text-slate-400">
-          ImageNet-pretrained ResNet50, frozen backbone, ordinal-weighted cross-entropy.
-          Weighted F1 is the score that matters on xBD because no-damage dominates.
+          Metrics, confusion matrix, and training curves below are generated placeholders from the
+          synthetic dashboard catalog. They are not produced by the bundled ResNet50 checkpoint
+          (no checkpoint is included) and must not be cited as model performance.
         </p>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-3">
         <Card className="bg-[#0d1724] ring-white/10">
           <CardHeader>
-            <CardDescription>Weighted F1</CardDescription>
+            <CardDescription>Synthetic weighted F1</CardDescription>
             <CardTitle className="text-3xl tabular-nums">
               {metrics.weighted_f1.toFixed(3)}
             </CardTitle>
@@ -44,7 +47,7 @@ export default function ModelPage() {
         </Card>
         <Card className="bg-[#0d1724] ring-white/10">
           <CardHeader>
-            <CardDescription>Macro F1</CardDescription>
+            <CardDescription>Synthetic macro F1</CardDescription>
             <CardTitle className="text-3xl tabular-nums">
               {metrics.macro_f1.toFixed(3)}
             </CardTitle>
@@ -52,7 +55,7 @@ export default function ModelPage() {
         </Card>
         <Card className="bg-[#0d1724] ring-white/10">
           <CardHeader>
-            <CardDescription>Buildings</CardDescription>
+            <CardDescription>Synthetic demo buildings</CardDescription>
             <CardTitle className="text-3xl tabular-nums">
               {metrics.n_buildings}
             </CardTitle>
@@ -64,7 +67,7 @@ export default function ModelPage() {
         <Card className="bg-[#0d1724] ring-white/10">
           <CardHeader>
             <CardTitle>Confusion matrix</CardTitle>
-            <CardDescription>Rows are true labels, columns are predictions.</CardDescription>
+            <CardDescription>Synthetic demo counts; rows/columns are not real evaluation labels.</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="overflow-x-auto">
@@ -116,7 +119,7 @@ export default function ModelPage() {
         <Card className="bg-[#0d1724] ring-white/10">
           <CardHeader>
             <CardTitle>Training curves</CardTitle>
-            <CardDescription>Frozen-backbone fine-tune, 8 epochs.</CardDescription>
+            <CardDescription>Synthetic placeholder curves; no real training run is represented.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
             <Spark

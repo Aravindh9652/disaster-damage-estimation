@@ -4,6 +4,7 @@ __pycache__/
 .pytest_cache/
 models/*.pt
 data/xbd/crops/
+data/assessments/
 web/node_modules/
 web/.next/
 web/out/

@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
-"""Build a self-contained demo dataset that looks like xBD continuation output.
+"""Build a self-contained synthetic demo dataset for the dashboard UI.
 
 The original xBD download is huge and gated. This script synthesizes four
 disaster tiles, extracts building crops the same way extract_buildings.py
-would, and writes dashboard JSON as if ResNet50 had been evaluated on them.
+writes synthetic labels, model-like predictions, and evaluation figures solely
+to exercise dashboard rendering. Nothing produced here is a real observation,
+trained-model output, or measured model evaluation.
 Confusion between minor and major damage is injected on purpose — that is
 the hard pair on the Joint Damage Scale.
 """

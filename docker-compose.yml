@@ -1,7 +1,31 @@
 services:
+  db:
+    image: postgis/postgis:16-3.4
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-damagemap}
+      POSTGRES_USER: ${POSTGRES_USER:-damagemap}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-local-development-only}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-damagemap} -d ${POSTGRES_DB:-damagemap}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
   api:
     build: .
     ports:
       - "8000:8000"
     volumes:
       - ./models:/app/models:ro
+      - ./data/assessments:/app/data/assessments
+    environment:
+      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-damagemap}:${POSTGRES_PASSWORD:-local-development-only}@db:5432/${POSTGRES_DB:-damagemap}
+      ASSESSMENT_STORAGE_DIR: /app/data/assessments
+    depends_on:
+      db:
+        condition: service_healthy
+volumes:
+  postgres_data:

@@ -28,15 +28,15 @@ export default function DatasetPage() {
   const gallery = useMemo(() => {
     if (!data) return [];
     if (filter === "all") return data.gallery;
-    if (filter === "mistakes") return data.gallery.filter((g) => !g.correct);
+    if (filter === "mismatches") return data.gallery.filter((g) => !g.correct);
     return data.gallery.filter((g) => g.label === filter);
   }, [data, filter]);
 
-  if (!data && !error) return <p className="text-slate-400">Loading your Drive crops…</p>;
+  if (!data && !error) return <p className="text-slate-400">Loading bundled xBD metrics snapshot…</p>;
   if (error || !data) {
     return (
       <div className="space-y-3">
-        <h1 className="text-2xl font-semibold text-white">Your xBD crops</h1>
+        <h1 className="text-2xl font-semibold text-white">xBD metrics snapshot</h1>
         <p className="text-sm text-amber-200">
           {error}. Download the Drive folder, then run{" "}
           <code className="rounded bg-white/10 px-1">python ml/baseline_eval.py</code>.
@@ -53,13 +53,13 @@ export default function DatasetPage() {
     <div className="space-y-6">
       <div>
         <Badge variant="secondary" className="bg-emerald-500/15 text-emerald-200">
-          Loaded from your Google Drive folder
+          Bundled snapshot — source data not verified locally
         </Badge>
-        <h1 className="mt-2 text-2xl font-semibold text-white">xBD building crops</h1>
+        <h1 className="mt-2 text-2xl font-semibold text-white">xBD metrics snapshot</h1>
         <p className="mt-1 max-w-2xl text-sm text-slate-400">
-          {data.dataset}. {data.n_total.toLocaleString()} chips already extracted
-          into four Joint Damage Scale folders. This page is the continuation on
-          <em> your</em> data, not the synthetic map tiles.
+          {data.dataset}. The bundled snapshot reports {data.n_total.toLocaleString()} chips, but
+          the source crops are not present in this checkout and these metrics have not been
+          reproduced here. This is not a live Google Drive connection.
         </p>
         <a
           href={data.source}
@@ -75,7 +75,7 @@ export default function DatasetPage() {
         {CLASS_ORDER.map((id) => (
           <Card key={id} className="bg-[#0d1724] ring-white/10">
             <CardHeader className="pb-2">
-              <CardDescription className="capitalize">{prettyClass(id)}</CardDescription>
+              <CardDescription className="capitalize">Snapshot count · {prettyClass(id)}</CardDescription>
               <CardTitle className="text-2xl tabular-nums">
                 {(data.counts[id] ?? 0).toLocaleString()}
               </CardTitle>
@@ -98,21 +98,21 @@ export default function DatasetPage() {
       <div className="grid gap-6 lg:grid-cols-2">
         <Card className="bg-[#0d1724] ring-white/10">
           <CardHeader>
-            <CardTitle>CPU baseline on your chips</CardTitle>
+            <CardTitle>Bundled CPU baseline snapshot (unverified)</CardTitle>
             <CardDescription>
-              {data.baseline}. Weighted F1 {data.metrics.weighted_f1.toFixed(3)} on{" "}
-              {data.n_eval} held-out buildings. Run ResNet50 with{" "}
+              {data.baseline}. Snapshot weighted F1 {data.metrics.weighted_f1.toFixed(3)} on{" "}
+              {data.n_eval} reported held-out buildings; not recomputed from local crops. Run baseline evaluation with{" "}
               <code>python ml/train.py --root ..</code> after splits.
             </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="mb-4 grid grid-cols-2 gap-3 text-sm">
               <div>
-                <p className="text-slate-500">Weighted F1</p>
+                <p className="text-slate-500">Snapshot weighted F1</p>
                 <p className="text-2xl tabular-nums">{data.metrics.weighted_f1.toFixed(3)}</p>
               </div>
               <div>
-                <p className="text-slate-500">Macro F1</p>
+                <p className="text-slate-500">Snapshot macro F1</p>
                 <p className="text-2xl tabular-nums">{data.metrics.macro_f1.toFixed(3)}</p>
               </div>
             </div>
@@ -158,7 +158,7 @@ export default function DatasetPage() {
                 <li key={c} className="flex justify-between">
                   <span>{prettyClass(c)}</span>
                   <span className="tabular-nums">
-                    F1 {(data.metrics.per_class_f1[c] * 100).toFixed(1)}%
+                    Snapshot F1 {(data.metrics.per_class_f1[c] * 100).toFixed(1)}%
                   </span>
                 </li>
               ))}
@@ -168,7 +168,7 @@ export default function DatasetPage() {
 
         <Card className="bg-[#0d1724] ring-white/10">
           <CardHeader>
-            <CardTitle>Severity from your labels</CardTitle>
+            <CardTitle>Severity from bundled snapshot labels</CardTitle>
             <CardDescription>
               Mean Joint Damage Scale weight × 100 on the evaluation split.
               Your Drive subset is damage-heavy (no-damage is the smallest class),
@@ -177,13 +177,13 @@ export default function DatasetPage() {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex justify-between text-sm">
-              <span className="text-slate-500">Labeled severity</span>
+              <span className="text-slate-500">Snapshot label severity</span>
               <span className="text-2xl tabular-nums text-white">
                 {data.severity_if_all_labeled.toFixed(1)}
               </span>
             </div>
             <div className="flex justify-between text-sm">
-              <span className="text-slate-500">Baseline predicted</span>
+              <span className="text-slate-500">Snapshot baseline prediction</span>
               <span className="text-2xl tabular-nums">
                 {data.severity_if_all_predicted.toFixed(1)}
               </span>
@@ -197,7 +197,7 @@ export default function DatasetPage() {
       </div>
 
       <div className="flex flex-wrap gap-2">
-        {["all", "mistakes", ...CLASS_ORDER].map((id) => (
+        {["all", "mismatches", ...CLASS_ORDER].map((id) => (
           <button
             key={id}
             type="button"
@@ -206,7 +206,7 @@ export default function DatasetPage() {
               filter === id ? "bg-white/15 text-white" : "bg-white/5 text-slate-400"
             }`}
           >
-            {id === "all" || id === "mistakes" ? id : prettyClass(id)}
+            {id === "all" ? "All snapshot crops" : id === "mismatches" ? "Snapshot mismatches" : prettyClass(id)}
           </button>
         ))}
       </div>

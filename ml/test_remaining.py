@@ -4,7 +4,7 @@ import numpy as np
 from PIL import Image
 
 from preprocess import register_pair
-from scoring import priority_score, zone_damage_area
+from scoring import human_class_for_review, priority_score, zone_damage_area
 from seg_metrics import dice_score, pixel_accuracy, pixel_iou
 from segment import change_mask, estimate_damage_mask, texture_mask
 from unet import build_unet
@@ -21,9 +21,20 @@ def test_priority_bounds():
 
 
 def test_priority_formula():
-    scored = priority_score(0.5, 0.2, 0.5)
-    expected = 100 * (0.5 * 0.5 + 0.3 * 0.2 + 0.2 * (0.5 * 0.5))
+    scored = priority_score(0.5, 0.2, 1.0)
+    expected = 100 * (0.5 * 0.5 + 0.3 * 0.2 + 0.2 * (0.5 * 1.0))
     assert abs(scored["priority_score"] - round(expected, 2)) < 0.02
+    assert scored["components"]["impact_factor"] == 1.0
+
+
+def test_priority_does_not_depend_on_confidence():
+    assert priority_score(0.8, 0.4)["priority_score"] == priority_score(0.8, 0.4, 1.0)["priority_score"]
+
+
+def test_human_verification_is_separate_from_prediction():
+    assert human_class_for_review("confirmed", "major-damage", None) == "major-damage"
+    assert human_class_for_review("corrected", "major-damage", "minor-damage") == "minor-damage"
+    assert human_class_for_review("unresolved", "major-damage", None) is None
 
 
 def test_area_weights_differ_from_a_single_class_mix():
@@ -153,6 +164,8 @@ def test_geojson_uses_longitude_latitude():
 if __name__ == "__main__":
     test_priority_bounds()
     test_priority_formula()
+    test_priority_does_not_depend_on_confidence()
+    test_human_verification_is_separate_from_prediction()
     test_area_weights_differ_from_a_single_class_mix()
     test_pixel_metrics()
     test_identical_pair_has_no_shift()

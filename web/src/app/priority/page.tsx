@@ -4,15 +4,45 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useCatalog } from "@/hooks/use-catalog";
-import { levelClass, priorityScore, zoneDamageArea, type PriorityLevel } from "@/lib/scoring";
+import {
+  DEFAULT_PRIORITY_CONFIGURATION,
+  levelClass,
+  priorityScore,
+  zoneDamageArea,
+  type PriorityConfiguration,
+  type PriorityLevel,
+} from "@/lib/scoring";
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 const TYPES = ["all", "flood", "fire", "tsunami", "earthquake"] as const;
+const API_URL = process.env.NEXT_PUBLIC_INFERENCE_API_URL ?? "http://127.0.0.1:8000";
 
 export default function PriorityPage() {
   const { catalog, error, loading } = useCatalog();
   const [kind, setKind] = useState<(typeof TYPES)[number]>("all");
+  const [configuration, setConfiguration] = useState<PriorityConfiguration>(DEFAULT_PRIORITY_CONFIGURATION);
+  const [configurationWarning, setConfigurationWarning] = useState<string | null>(null);
+
+  useEffect(() => {
+    let active = true;
+    fetch(`${API_URL}/api/health`)
+      .then(async (response) => {
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.detail ?? "Scoring configuration is unavailable.");
+        if (active && data.priority_configuration) {
+          setConfiguration({
+            weights: data.priority_configuration.weights,
+            cutoffs: data.priority_configuration.cutoffs,
+          });
+          setConfigurationWarning(null);
+        }
+      })
+      .catch(() => {
+        if (active) setConfigurationWarning("Inference API unavailable; displaying documented default scoring settings.");
+      });
+    return () => { active = false; };
+  }, []);
 
   const zones = useMemo(() => {
     if (!catalog) return [];
@@ -25,11 +55,11 @@ export default function PriorityPage() {
             const top = Math.max(...Object.values(building.probs));
             return sum + top;
           }, 0) / Math.max(event.buildings.length, 1);
-        const scored = priorityScore(event.severity_pred, zoneDamageArea(labels), confidence);
+        const scored = priorityScore(event.severity_pred, zoneDamageArea(labels), 1, configuration);
         return { event, confidence, ...scored };
       })
       .sort((a, b) => b.priority_score - a.priority_score);
-  }, [catalog, kind]);
+  }, [catalog, configuration, kind]);
 
   if (loading) return <p className="text-slate-400">Ranking priority zones…</p>;
   if (error || !catalog) return <p className="text-red-300">{error ?? "Catalog missing."}</p>;
@@ -38,14 +68,18 @@ export default function PriorityPage() {
     <div className="space-y-6">
       <section className="space-y-3">
         <Badge variant="secondary" className="bg-orange-500/15 text-orange-200">
-          In-memory ranking
+          Synthetic demo ranking
         </Badge>
         <h1 className="text-3xl font-semibold tracking-tight text-white">Priority zones</h1>
         <p className="max-w-2xl text-sm leading-6 text-slate-400">
-          Each tile is scored as 0.5 × severity + 0.3 × damaged-area share + 0.2 × severity ×
-          confidence. The list is computed in the browser from the demo catalog. The same ranking
-          is available from <span className="text-slate-300">GET /api/priority-zones</span> and is
-          not written to a database.
+          Project-defined score applied to synthetic catalog values: {configuration.weights.severity} × normalized severity + {configuration.weights.damage_area} × normalized
+          damaged-area share + {configuration.weights.impact} × normalized severity × impact factor (neutral default 1.0).
+          Confidence is shown separately as uncertainty and does not lower priority. The list uses
+          demo catalog data; this is not an official emergency standard.
+        </p>
+        <p className="text-xs text-slate-500">
+          Cutoffs: critical ≥ {configuration.cutoffs.critical}, high ≥ {configuration.cutoffs.high}, moderate ≥ {configuration.cutoffs.moderate}; lower scores are low.
+          {configurationWarning && ` ${configurationWarning}`}
         </p>
       </section>
 
@@ -85,7 +119,7 @@ export default function PriorityPage() {
                 </p>
               </div>
               <p className="text-sm text-slate-400">
-                Severity {zone.event.severity_pred.toFixed(1)} · confidence {(zone.confidence * 100).toFixed(0)}%
+                Severity {zone.event.severity_pred.toFixed(1)} · uncertainty {((1 - zone.confidence) * 100).toFixed(0)}%
               </p>
               <Button asChild size="sm" variant="outline">
                 <Link href={`/map?event=${zone.event.id}`}>Open map</Link>

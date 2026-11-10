@@ -69,6 +69,7 @@ def damage_map(catalog: dict, event_id: str | None = None) -> dict:
                         "label": building["label"],
                         "prediction": building["pred"],
                         "confidence": round(max(building["probs"].values()), 4),
+                        "human_verification": None,
                     },
                 }
             )
@@ -97,6 +98,7 @@ def find_building(catalog: dict, uid: str) -> dict | None:
                     "prediction": building["pred"],
                     "probabilities": building["probs"],
                     "polygon": building["polygon"],
+                    "human_verification": None,
                 }
     return None
 
@@ -109,7 +111,7 @@ def priority_zones(catalog: dict, disaster_type: str | None = None) -> list[dict
         labels = [building["pred"] for building in event["buildings"]]
         confidences = [max(building["probs"].values()) for building in event["buildings"]]
         confidence = float(sum(confidences) / len(confidences)) if confidences else 0.0
-        scored = priority_score(event["severity_pred"], zone_damage_area(labels), confidence)
+        scored = priority_score(event["severity_pred"], zone_damage_area(labels))
         zones.append(
             {
                 "id": event["id"],
@@ -120,6 +122,7 @@ def priority_zones(catalog: dict, disaster_type: str | None = None) -> list[dict
                 "buildings": len(labels),
                 "severity_index": event["severity_pred"],
                 "confidence": round(confidence, 4),
+                "uncertainty": round(1.0 - confidence, 4),
                 **scored,
             }
         )

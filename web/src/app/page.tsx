@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Progress } from "@/components/ui/progress";
 import { useCatalog } from "@/hooks/use-catalog";
 import { prettyClass, severityBand } from "@/lib/catalog";
-import { CheckCircle2, Layers3, TriangleAlert } from "lucide-react";
+import { CircleHelp, Layers3, TriangleAlert } from "lucide-react";
 import Link from "next/link";
 
 export default function OverviewPage() {
@@ -29,42 +29,42 @@ export default function OverviewPage() {
     <div className="space-y-8">
       <section className="space-y-3">
         <div className="flex flex-wrap gap-2">
-          <Badge variant="secondary" className="bg-orange-500/15 text-orange-200">
-            Continuation after building extraction
+          <Badge variant="secondary" className="bg-amber-500/15 text-amber-100">
+            Synthetic demo catalog — not real model results
           </Badge>
-          <Badge variant="secondary" className="bg-emerald-500/15 text-emerald-200">
-            Your Drive xBD folder is wired in
+          <Badge variant="secondary" className="bg-slate-500/15 text-slate-200">
+            No trained model checkpoint is bundled
           </Badge>
         </div>
         <h1 className="max-w-3xl text-3xl font-semibold tracking-tight text-white sm:text-4xl">
-          Classify every extracted building, then rank tiles by severity.
+          A demo dashboard for building damage and disaster triage.
         </h1>
         <p className="max-w-2xl text-slate-400">
-          Your Drive folder (<span className="text-slate-300">resnet_dataset</span>)
-          already holds extracted building chips. Open{" "}
+          This dashboard&apos;s map, labels, predictions, confidence values, and evaluation figures
+          come from generated demo artifacts. They are placeholders for the workflow, not real
+          disaster observations or model evaluation. Open{" "}
           <Link href="/dataset" className="text-orange-300 hover:underline">
-            Your xBD
+            xBD metrics snapshot
           </Link>{" "}
-          for counts, a CPU baseline, and real crops. The map page still uses
-          four demo tiles so you can see polygon overlays until full post-disaster
-          GeoJSON is in the folder.
+          for the bundled, unverified metrics snapshot. The map uses four synthetic tiles with
+          approximate city anchors; only user-supplied inference data can appear as saved analysis.
         </p>
       </section>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <Kpi label="Buildings classified" value={String(metrics.n_buildings)} hint="post-disaster crops" />
+        <Kpi label="Synthetic demo buildings" value={String(metrics.n_buildings)} hint="not real predictions" />
         <Kpi
-          label="Weighted F1"
+          label="Synthetic demo weighted F1"
           value={metrics.weighted_f1.toFixed(3)}
-          hint="xView2 primary metric"
+          hint="not an evaluation result"
         />
         <Kpi
-          label="Hardest class"
+          label="Demo lowest-F1 class"
           value={prettyClass(hardest[0])}
           hint={`F1 ${hardest[1].toFixed(2)}`}
         />
         <Kpi
-          label="Events mapped"
+          label="Synthetic demo events"
           value={String(metrics.n_events)}
           hint="flood, fire, tsunami, quake"
         />
@@ -75,7 +75,7 @@ export default function OverviewPage() {
           <CardHeader>
             <CardTitle>Pipeline from your notebook</CardTitle>
             <CardDescription>
-              Steps 1–2 match dataset download and building extraction. Everything after is new.
+              Displayed step statuses are demo placeholders; they do not prove that the pipeline ran.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">
@@ -84,11 +84,11 @@ export default function OverviewPage() {
                 key={step.step}
                 className="flex items-center gap-3 rounded-lg border border-white/5 bg-white/2 px-3 py-2"
               >
-                <CheckCircle2 className="size-4 text-emerald-400" />
+                <CircleHelp className="size-4 text-amber-300" />
                 <span className="w-6 text-xs text-slate-500">{step.step}</span>
                 <span className="flex-1 text-sm text-slate-200">{step.name}</span>
                 <Badge variant="secondary" className="text-[10px] uppercase">
-                  {step.step <= 2 ? "yours" : "continuation"}
+                  demo
                 </Badge>
               </div>
             ))}
@@ -112,7 +112,7 @@ export default function OverviewPage() {
                     {prettyClass(c.id)}
                   </span>
                   <span className="tabular-nums text-slate-400">
-                    F1 {(metrics.per_class_f1[c.id] * 100).toFixed(0)}%
+                    Synthetic F1 {(metrics.per_class_f1[c.id] * 100).toFixed(0)}%
                   </span>
                 </div>
                 <Progress value={metrics.per_class_f1[c.id] * 100} />
@@ -126,7 +126,7 @@ export default function OverviewPage() {
       <section className="space-y-3">
         <div className="flex items-center gap-2 text-sm text-slate-400">
           <Layers3 className="size-4" />
-          Tile severity (mean ordinal weight × 100)
+          Synthetic demo tile severity (not a real assessment)
         </div>
         <div className="grid gap-4 md:grid-cols-2">
           {events.map((event) => {
@@ -154,13 +154,13 @@ export default function OverviewPage() {
                     </div>
                     <div className="flex items-end justify-between">
                       <div>
-                        <p className="text-xs text-slate-500">Predicted severity</p>
+                        <p className="text-xs text-slate-500">Demo predicted severity</p>
                         <p className="text-2xl font-semibold tabular-nums text-white">
                           {event.severity_pred.toFixed(1)}
                         </p>
                       </div>
                       <p className="text-xs text-slate-500">
-                        labeled {event.severity_true.toFixed(1)}
+                        demo-label severity {event.severity_true.toFixed(1)}
                       </p>
                     </div>
                   </CardContent>

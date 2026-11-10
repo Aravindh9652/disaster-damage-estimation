@@ -3,7 +3,7 @@
 import { buildingsToGeoJson, eventOrigin, type DamageFeatureCollection } from "@/lib/geo";
 import type { DamageClass, DisasterEvent } from "@/lib/catalog";
 import { useEffect } from "react";
-import { CircleMarker, GeoJSON, MapContainer, TileLayer, useMap } from "react-leaflet";
+import { CircleMarker, GeoJSON, MapContainer, Popup, TileLayer, useMap } from "react-leaflet";
 import type { Layer, PathOptions } from "leaflet";
 import "leaflet/dist/leaflet.css";
 
@@ -12,6 +12,14 @@ const COLORS: Record<DamageClass, string> = {
   "minor-damage": "#eab308",
   "major-damage": "#f97316",
   destroyed: "#ef4444",
+};
+type AssessmentFeature = {
+  id: string;
+  coordinates: [number, number];
+  ai_prediction: DamageClass;
+  human_damage_class: DamageClass | null;
+  review_status: string;
+  confidence: number;
 };
 
 function FitAll({ events }: { events: DisasterEvent[] }) {
@@ -49,6 +57,7 @@ export function GisMap({
   showPred,
   selectedId,
   showAll,
+  assessmentFeatures = [],
   onSelectBuilding,
   onSelectEvent,
 }: {
@@ -57,6 +66,7 @@ export function GisMap({
   showPred: boolean;
   selectedId: string | null;
   showAll: boolean;
+  assessmentFeatures?: AssessmentFeature[];
   onSelectBuilding: (uid: string) => void;
   onSelectEvent: (id: string) => void;
 }) {
@@ -94,6 +104,31 @@ export function GisMap({
             pathOptions={{ color: "#fb923c", fillColor: "#fb923c", fillOpacity: 0.85, weight: 1 }}
             eventHandlers={{ click: () => onSelectEvent(item.id) }}
           />
+        );
+      })}
+      {assessmentFeatures.map((feature) => {
+        const [longitude, latitude] = feature.coordinates;
+        const humanVerified = ["confirmed", "corrected"].includes(feature.review_status);
+        return (
+          <CircleMarker
+            key={feature.id}
+            center={[latitude, longitude]}
+            radius={humanVerified ? 9 : 6}
+            pathOptions={{
+              color: humanVerified ? "#38bdf8" : "#f97316",
+              fillColor: COLORS[feature.ai_prediction],
+              fillOpacity: 0.85,
+              weight: humanVerified ? 3 : 1.5,
+            }}
+          >
+            <Popup>
+              <strong>Persisted AI assessment</strong><br />
+              AI prediction: {feature.ai_prediction}<br />
+              Confidence: {(feature.confidence * 100).toFixed(1)}%<br />
+              Human status: {feature.review_status}<br />
+              Human result: {feature.human_damage_class ?? "not verified"}
+            </Popup>
+          </CircleMarker>
         );
       })}
       {!showAll && (

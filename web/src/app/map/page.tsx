@@ -15,7 +15,7 @@ import {
 } from "@/lib/catalog";
 import { buildingsToGeoJson } from "@/lib/geo";
 import dynamic from "next/dynamic";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 
@@ -30,6 +30,16 @@ const COLORS: Record<DamageClass, string> = {
   "major-damage": "#f97316",
   destroyed: "#ef4444",
 };
+const API_URL = process.env.NEXT_PUBLIC_INFERENCE_API_URL ?? "http://127.0.0.1:8000";
+
+type AssessmentFeature = {
+  id: string;
+  coordinates: [number, number];
+  ai_prediction: DamageClass;
+  human_damage_class: DamageClass | null;
+  review_status: string;
+  confidence: number;
+};
 
 function MapInner() {
   const { catalog, error, loading } = useCatalog();
@@ -38,6 +48,8 @@ function MapInner() {
   const [selected, setSelected] = useState<Building | null>(null);
   const [showPred, setShowPred] = useState(true);
   const [showAll, setShowAll] = useState(false);
+  const [assessmentFeatures, setAssessmentFeatures] = useState<AssessmentFeature[]>([]);
+  const [assessmentMapError, setAssessmentMapError] = useState<string | null>(null);
 
   const event: DisasterEvent | undefined = useMemo(() => {
     if (!catalog) return undefined;
@@ -45,6 +57,30 @@ function MapInner() {
       catalog.events.find((e) => e.id === eventId) ?? catalog.events[0]
     );
   }, [catalog, eventId]);
+
+  useEffect(() => {
+    let active = true;
+    const query = showAll || !event ? "" : `?event_id=${encodeURIComponent(event.id)}`;
+    fetch(`${API_URL}/api/assessments/map${query}`)
+      .then(async (response) => {
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.detail ?? "Persisted assessment map is unavailable.");
+        if (active) {
+          setAssessmentFeatures(data.features.map((feature: { properties: Omit<AssessmentFeature, "coordinates">; geometry: { coordinates: [number, number] } }) => ({
+            ...feature.properties,
+            coordinates: feature.geometry.coordinates,
+          })));
+          setAssessmentMapError(null);
+        }
+      })
+      .catch((cause: unknown) => {
+        if (active) {
+          setAssessmentFeatures([]);
+          setAssessmentMapError(cause instanceof Error ? cause.message : "Persisted assessment map is unavailable.");
+        }
+      });
+    return () => { active = false; };
+  }, [event, showAll]);
 
   if (loading) return <p className="text-slate-400">Loading tiles…</p>;
   if (error || !catalog || !event) {
@@ -57,9 +93,9 @@ function MapInner() {
     <div className="space-y-4">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h1 className="text-2xl font-semibold text-white">Damage map</h1>
+          <h1 className="text-2xl font-semibold text-white">Damage map · synthetic catalog</h1>
           <p className="text-sm text-slate-400">
-            Building polygons on OpenStreetMap, placed at each event&apos;s city. Zoom out or choose All events to see the other disasters.
+            Catalog polygons, classes, and city anchors are synthetic demo data, not real xBD predictions or verified coordinates. Saved analysis points appear only when coordinates were explicitly provided.
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
@@ -86,14 +122,14 @@ function MapInner() {
           variant={showPred ? "secondary" : "outline"}
           onClick={() => setShowPred(true)}
         >
-          Predicted
+          Synthetic predictions
         </Button>
         <Button
           size="sm"
           variant={!showPred ? "secondary" : "outline"}
           onClick={() => setShowPred(false)}
         >
-          Ground truth
+          Synthetic labels (not ground truth)
         </Button>
         <Button size="sm" variant={showAll ? "secondary" : "outline"} onClick={() => setShowAll((value) => !value)}>
           {showAll ? "Back to buildings" : "All events"}
@@ -107,7 +143,10 @@ function MapInner() {
             {prettyClass(id)}
           </span>
         ))}
+        <span className="text-xs text-orange-300">● AI inference point</span>
+        <span className="text-xs text-sky-300">◎ Human-verified result</span>
       </div>
+      {assessmentMapError && <p className="text-xs text-slate-500">Saved assessment layer unavailable: {assessmentMapError}</p>}
 
       <div className="grid gap-4 lg:grid-cols-[minmax(0,1.6fr)_minmax(280px,0.9fr)]">
         <Card className="overflow-hidden bg-[#0d1724] p-0 ring-white/10">
@@ -116,6 +155,7 @@ function MapInner() {
             event={event}
             showPred={showPred}
             showAll={showAll}
+            assessmentFeatures={assessmentFeatures}
             selectedId={selected?.uid ?? null}
             onSelectBuilding={(uid) => {
               setSelected(event.buildings.find((building) => building.uid === uid) ?? null);
@@ -142,12 +182,12 @@ function MapInner() {
               </div>
             </CardHeader>
             <CardContent className="space-y-2 text-sm">
-              <Row label="Severity (pred)" value={event.severity_pred.toFixed(1)} />
-              <Row label="Severity (labeled)" value={event.severity_true.toFixed(1)} />
+              <Row label="Synthetic severity (prediction)" value={event.severity_pred.toFixed(1)} />
+              <Row label="Synthetic severity (label)" value={event.severity_true.toFixed(1)} />
               {CLASS_ORDER.map((id) => (
                 <Row
                   key={id}
-                  label={prettyClass(id)}
+                  label={`Synthetic ${prettyClass(id)}`}
                   value={String(event.counts_pred[id])}
                 />
               ))}
@@ -159,7 +199,7 @@ function MapInner() {
               <CardHeader>
                 <CardTitle className="text-sm">{selected.uid}</CardTitle>
                 <CardDescription>
-                  pred {prettyClass(selected.pred)} · true {prettyClass(selected.label)}
+                  demo prediction {prettyClass(selected.pred)} · demo label {prettyClass(selected.label)}
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-3">
